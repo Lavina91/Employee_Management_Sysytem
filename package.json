@@ -1,0 +1,23 @@
+{
+  "name": "Employee_Management_Sysytem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "employee_tracker.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lavina91/Employee_Management_Sysytem.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lavina91/Employee_Management_Sysytem/issues"
+  },
+  "homepage": "https://github.com/Lavina91/Employee_Management_Sysytem#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
+}
