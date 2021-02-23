@@ -4,7 +4,7 @@ CREATE DATABASE employee_trackerDB;
 
 USE employee_trackerDB;
 
-CREATE TABLE deparments (
+CREATE TABLE departments (
 id INT AUTO_INCREMENT NOT NULL,
 name VARCHAR(30),
 PRIMARY KEY(id)
@@ -27,6 +27,6 @@ manager_id INT,
 PRIMARY KEY(id)
 );
 
-SELECT * FROM deparments;
+SELECT * FROM departments;
 SELECT * FROM role;
 SELECT * FROM employee;
