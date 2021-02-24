@@ -77,7 +77,6 @@ inquirer.prompt({
 // ----------- VIEW ------------------------------
 
 const viewAllDepartments = () => { 
-
     connection.query('SELECT * FROM departments', (err, res) => {
         if (err) throw err;
         console.log(res)
@@ -102,10 +101,21 @@ const viewAllEmployees = () => {
  };
 
 const viewByDepartment = () => {
-    console.log('Inside Function');
     // get the data from what department user chose to view
 
     // AND SELECT answer FROM departments 
+
+    inquirer.prompt({
+        type:'list',
+        message:'What department do you want search all the employees for?',
+        choices: ['Sales', 'Engineering', 'Finance', 'Legal'],
+        name: 'department_name'
+    }).then( (answer) => {
+            connection.query('SELECT name FROM role INNER JOIN departmentS ON role.department_id = departmentS.id', (err, res) => {
+                if (err) throw err;
+                console.log(res)
+            });
+    })
 };
 
 const viewByRole = () => {
@@ -125,9 +135,23 @@ const viewByManger = () => {
 
 
 const addDepartment = () => {
-    // get the department name 
-
-    // use INSERT INTO departments SET ?
+    inquirer.prompt({
+        type: 'input',
+        message: 'What is the name of the department you will like to add to database?',
+        name: 'newDepartmentName'
+    }).then( (answer) => {
+        connection.query(
+            'INSERT INTO departments SET ?',
+            {
+                name: answer.newDepartmentName
+            },
+            function (err) {
+                if (err) throw err;
+                console.log('You created a new department!');
+                start();
+            }
+        )
+    })
  };
 
 const addRole = () => { 
