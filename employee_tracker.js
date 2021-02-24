@@ -83,21 +83,18 @@ const viewAllDepartments = () => {
         console.log(res)
         start();
     })
-
-
-
-
 };
 
 const viewAllRoles = () => {
-
-
+    connection.query('SELECT * FROM role', (err, res) => {
+        if (err) throw err;
+        console.log(res)
+        start();
+    });
 };
 
 const viewAllEmployees = () => {
-    console.log('Inside Function');
-    // display all employees 
-    // SELECT * FROM employee
+ 
  };
 
 const viewByDepartment = () => {
