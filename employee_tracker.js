@@ -161,6 +161,33 @@ const addRole = () => {
     // 3. department id
 
      // use INSERT INTO role SET ?
+
+     connection.query ('SELECT * FROM departments', (err, res) => {
+         if (err) throw err;
+
+         inquirer.prompt({
+             type: 'rawlist',
+             name: 'newDepRoleName',
+             choices: function() {
+                 let choiceArray = [];
+                 for (let i = 0; i < res.length; i++) {
+                     choiceArray.push(res[i].name);
+                 }
+                 return choiceArray;
+             },
+             message: 'What department do you want to add the new role to?'
+            },
+            {
+                type: 'input',
+                message: 'What is the name of the new role you will like to add?',
+                name: 'roleName'
+            }).then( (answer) => {
+                console.log(answer)
+            })
+     })
+
+
+
 };
 
 const addEmployee = () => { 
