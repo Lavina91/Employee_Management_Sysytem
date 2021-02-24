@@ -90,9 +90,12 @@ const viewAllDepartments = () => {
 
     // display all departments
     // SELECT * FROM departments
+
+    console.log('Inside Function');
 };
 
-const viewAllRoles = () => { 
+const viewAllRoles = () => {
+    console.log('Inside Function'); 
     // different Roles
 
     // 1. Sales
@@ -120,11 +123,13 @@ const viewAllRoles = () => {
 };
 
 const viewAllEmployees = () => {
+    console.log('Inside Function');
     // display all employees 
     // SELECT * FROM employee
  };
 
 const viewByDepartment = () => {
+    console.log('Inside Function');
     // get the data from what department user chose to view
 
     // AND SELECT answer FROM departments 
