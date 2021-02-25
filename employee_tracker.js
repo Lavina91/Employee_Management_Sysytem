@@ -155,34 +155,55 @@ const addDepartment = () => {
  };
 
 const addRole = () => { 
-    // need the following info 
-    // 1. role title 
-    // 2. salary 
-    // 3. department id
-
-     // use INSERT INTO role SET ?
 
      connection.query ('SELECT * FROM departments', (err, res) => {
          if (err) throw err;
 
-         inquirer.prompt({
-             type: 'rawlist',
-             name: 'newDepRoleName',
-             choices: function() {
-                 let choiceArray = [];
-                 for (let i = 0; i < res.length; i++) {
-                     choiceArray.push(res[i].name);
-                 }
-                 return choiceArray;
-             },
-             message: 'What department do you want to add the new role to?'
-            },
-            {
-                type: 'input',
-                message: 'What is the name of the new role you will like to add?',
-                name: 'roleName'
-            }).then( (answer) => {
-                console.log(answer)
+         const roleQuestions = [{
+                                 type: 'input',
+                                 message: 'What is the title of the role you would like to add?',
+                                name: 'roleName'
+                                },
+                                {
+                                    type:'input',
+                                    message:'What is the salary of the new role?',
+                                    name:'roleSalary'
+                                },
+                                {
+                                type: 'rawlist',
+                                message: 'What department do you want to add the new role to?',
+                                choices: function () {
+                                    let choiceArray = [];
+                                    for (let i = 0; i < res.length; i++) {
+                         choiceArray.push(res[i].name);
+                     }
+                     return choiceArray;
+                 },
+                 name: 'depRoleName'
+             }
+        ]
+
+         inquirer.prompt(roleQuestions).then(function(answer) {
+                
+                let chosenDepart =[];
+                for (let i =0; i < res.length; i++) {
+                    if(res[i].name === answer.depRoleName) {
+                        let id = res[i]
+                        chosenDepart.push(id)
+                    }
+                }
+
+               connection.query('INSERT INTO role SET ?',
+               {
+                   title: answer.roleName,
+                   salary: answer.roleSalary,
+                   department_id: chosenDepart[0].id
+               }, (err) => {
+                   if (err) throw err;
+                   console.log('You successfully added a new role!')
+                   start();
+               })
+
             })
      })
 
