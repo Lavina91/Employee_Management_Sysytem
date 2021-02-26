@@ -38,8 +38,15 @@ node employee.tracker.js
 
 ## Screenshots
 
+![Picture of start screen for Employee Tracker](./images/start_screen.png)
+
+![Picture of viewing all employees](./images/all-employees.png)
+
+![Picture of viewing all employees by department](./images/view-employees-department.png)
+
+![Picture of viewing all departments](./images/view-all-departments.png)
 
 ## Questions 
 
 If you have any questions about the repo, open an issue or contact me directly at mlavina91@gmail.com. 
-You can find more of my work at (https://github.comLavina91/).
+You can find more of my work at (https://github.comLavina91/)

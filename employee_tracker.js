@@ -116,19 +116,19 @@ const viewAllRoles = () => {
 
 const viewAllEmployees = () => {
     // inner joining the departments and role table with employee table in DB
-    connection.query('SELECT first_name, last_name, salary, title, name, manager_id FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN departments ON role.department_id = departments.id', (err, res) => {
+    connection.query('SELECT employee.id, first_name, last_name, salary, title, name, manager_id FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN departments ON role.department_id = departments.id', (err, res) => {
         // if there is an error, display error
         if (err) throw err;
 
         // mapping through data and displaying 1st name, last name, role title, name of department and manager id
-        res.map(({ id, first_name, last_name, title, name, manager_id }) => {
+        res.map(({id, first_name, last_name, title, name, manager_id }) => {
             console.log(`
             Employee ID: ${id} 
             First Name: ${first_name}
             Last Name: ${last_name}
             Role Title: ${title}
             Department: ${name}
-            Manager ID ${manager_id}
+            Manager ID: ${manager_id}
                         `)
         })
         // calling start function
