@@ -25,9 +25,8 @@ inquirer.prompt({
         type: 'list',
         message: 'What would you like to do?',
         choices: ['View All Employees', 'View All Employees By Department', 
-                  'View All Employees By Roles', 'View All Employees By Manager',
-                  'View All Departments', 'View All Roles', 'Add A New Department',
-                  'Add A New Role', 'Add A New Employee', "Update An Employee Role", 'Exit'
+                  'View All Employees By Roles', 'View All Departments', 'View All Roles', 'Add A New Department',
+                  'Add A New Role', 'Add A New Employee', "Update An Employee's Role", 'Exit'
                 ],
         name: 'userChoice'
 
@@ -42,9 +41,6 @@ inquirer.prompt({
     }
     else if (answer.userChoice === 'View All Employees By Roles') {
         viewByRole();
-    }
-    else if (answer.userChoice === 'View All Employees By Manager') {
-        viewByManger();
     }
     else if (answer.userChoice === 'View All Departments') {
         viewAllDepartments();
@@ -109,14 +105,15 @@ const viewAllRoles = () => {
 };
 
 const viewAllEmployees = () => {
-    connection.query('SELECT * FROM employee', (err, res) => {
+    connection.query('SELECT first_name, last_name, salary, title, name, manager_id FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN departments ON role.department_id = departments.id', (err, res) => {
         if (err) throw err;
-        res.map(({ id, first_name, last_name, role_id, manager_id }) => {
+        res.map(({ id, first_name, last_name, title, name, manager_id }) => {
             console.log(`
             Employee ID: ${id} 
             First Name: ${first_name}
             Last Name: ${last_name}
-            Role ID: ${role_id}
+            Role Title: ${title}
+            Department: ${name}
             Manager ID ${manager_id}
                         `)
         })
@@ -407,48 +404,75 @@ const addEmployee = () => {
                             })
 
                     })
-
-
+                })
             })
         })
-
-})
-
-
-
-// SELECT all from role WHERE role.department_id = department.id
-    // ask user what role to choose from department user chose
-
-    // ask user 1st and last name 
+    };
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-};
 // ---------- UPDATE ------------------------------
 
 const updateRole = () => { 
 
     // use UPDATE set ?(employee role) WHERE ?(employee name)
+
+    // SELECT * from employees and prompt user which employee they want to choose 
+    // AND what is the name of the new role 
+
+    connection.query('SELECT first_name, last_name, salary, title, name, manager_id FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN departments ON role.department_id = departments.id', (err, res) => {
+
+        if (err) throw err;
+
+        const updateQuestion = [
+            {
+                type: 'rawlist',
+                message: 'What employee do you want to update?',
+                choices: function () {
+                    let choiceArray = [];
+                    for (let i = 0; i < res.length; i++) {
+                        choiceArray.push(res[i].first_name + ' ' + res[i].last_name);
+                    }
+                    return choiceArray;
+                },
+                name: 'employeeName'
+            },
+            {
+                type: 'input',
+                message: 'What is the name of the updated role?',
+                name: 'newRoleName'
+            }
+        ];
+
+        inquirer.prompt(updateQuestion).then((answer) => {
+
+            let chosenEmployee = [];
+            for (let i = 0; i < res.length; i++) {
+                if (res[i].first_name + ' ' + res[i].last_name == answer.employeeName) {
+                    chosenEmployee.push(res[i])
+                }
+            }
+            
+            connection.query(
+                "UPDATE employee INNER JOIN role ON employee.role_id = role.id SET ? WHERE ?", 
+            [ 
+                {
+                    title: answer.newRoleName
+                }, 
+                { 
+                    first_name: chosenEmployee[0].first_name,
+                    last_name: chosenEmployee[0].last_name
+                }
+            ],
+            (err, res) => {
+                if (err) throw err;
+                console.log("Successfully updated employee's role")
+                start();
+            })
+        })
+    })
 }; // NEED TO WORK ON 
+
 
 
 start();
