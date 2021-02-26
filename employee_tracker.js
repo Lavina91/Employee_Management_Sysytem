@@ -79,7 +79,14 @@ inquirer.prompt({
 const viewAllDepartments = () => { 
     connection.query('SELECT * FROM departments', (err, res) => {
         if (err) throw err;
-        console.log(res)
+        
+        res.map( ({id, name}) => {
+            console.log(`
+            Department ID: ${id} 
+            Department Name: ${name}
+                        `)
+        } )
+
         start();
     })
 };
@@ -87,7 +94,16 @@ const viewAllDepartments = () => {
 const viewAllRoles = () => {
     connection.query('SELECT * FROM role', (err, res) => {
         if (err) throw err;
-        console.log(res)
+        
+        res.map(({ id, title, salary, department_id }) => {
+            console.log(`
+            Role ID: ${id} 
+            Title of Role: ${title}
+            Salary: ${salary}
+            Department ID: ${department_id}
+                        `)
+        })
+        
         start();
     });
 };
@@ -95,15 +111,21 @@ const viewAllRoles = () => {
 const viewAllEmployees = () => {
     connection.query('SELECT * FROM employee', (err, res) => {
         if (err) throw err;
-        console.log(res)
+        res.map(({ id, first_name, last_name, role_id, manager_id }) => {
+            console.log(`
+            Employee ID: ${id} 
+            First Name: ${first_name}
+            Last Name: ${last_name}
+            Role ID: ${role_id}
+            Manager ID ${manager_id}
+                        `)
+        })
         start();
     })
  };
 
 const viewByDepartment = () => {
-    // get the data from what department user chose to view
 
-    // AND SELECT answer FROM departments 
     connection.query('SELECT * FROM departments', (err, res) => {
         inquirer.prompt({
             type: 'rawlist',
@@ -126,34 +148,94 @@ const viewByDepartment = () => {
                 }
             }
 
-            console.log(chosenDepart)
-
             let query = "SELECT first_name, last_name, salary, title, name, manager_id FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN departments ON role.department_id = departments.id WHERE departments.id = ? "
            
             connection.query(query, [chosenDepart[0].id], (err, res) => {
                 if (err) throw err;
 
                 res.forEach(( {first_name, last_name, salary, title, name, manager_id} ) => {
-                    console.log(`First Name: ${first_name} //   Last Name: ${last_name}   // Salary: ${salary}   // Title of position: ${title}   // Department: ${name}    // Manager ID: ${manager_id}`)
+                    console.log(`
+                                First Name: ${first_name}  
+                                Last Name: ${last_name}
+                                Salary: ${salary}
+                                Title of position: ${title}
+                                Department: ${name}
+                                Manager ID: ${manager_id}`)
                 })
             })
-        })
+            start();
+        });
+            
     })
-
-    start();
 };
 
 const viewByRole = () => {
-    // get the data from what role user chose to view
+    
+    connection.query('SELECT * FROM role', (err, res) => {
+        inquirer.prompt({
+            type: 'rawlist',
+            message: 'What role do you want to view?',
+            choices: function () {
+                let choiceArray = [];
+                for (let i = 0; i < res.length; i++) {
+                    choiceArray.push(res[i].title);
+                }
+                return choiceArray;
+            },
+            name: 'roleName'
+        }).then((answer) => {
 
-    // AND SELECT answer FROM role
+            let chosenRole = [];
+            for (let i = 0; i < res.length; i++) {
+                if (res[i].title === answer.roleName) {
+                    let id = res[i]
+                    chosenRole.push(id)
+                }
+            }
+
+            let query = "SELECT first_name, last_name, salary, title, name, manager_id FROM employee INNER JOIN role ON employee.role_id = role.id INNER JOIN departments ON role.department_id = departments.id WHERE role.id = ? "
+
+            connection.query(query, [chosenRole[0].id], (err, res) => {
+                if (err) throw err;
+
+                res.forEach(({ first_name, last_name, salary, title, name, manager_id }) => {
+                    console.log(`
+                                First Name: ${first_name}  
+                                Last Name: ${last_name}
+                                Salary: ${salary}
+                                Title of position: ${title}
+                                Department: ${name}
+                                Manager ID: ${manager_id}`)
+                })
+            })
+            start();
+        })
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 };
 
 const viewByManger = () => {
     // get the data from what employee user chose to view by manager id
 
     // AND SELECT answer FROM employee
-};
+};// NEED TO WORK ON 
 
 
 // ---------- ADD ---------------------------------
@@ -367,14 +449,14 @@ connection.query('SELECT * FROM departments', (err, res) => {
 
 
 
-};
+}; // NEED TO WORK ON 
 
 // ---------- UPDATE ------------------------------
 
 const updateRole = () => { 
 
     // use UPDATE set ?(employee role) WHERE ?(employee name)
-};
+}; // NEED TO WORK ON 
 
 
 start();
