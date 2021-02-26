@@ -231,12 +231,6 @@ const viewByRole = () => {
 
 };
 
-const viewByManger = () => {
-    // get the data from what employee user chose to view by manager id
-
-    // AND SELECT answer FROM employee
-};// NEED TO WORK ON 
-
 
 // ---------- ADD ---------------------------------
 
@@ -319,19 +313,8 @@ const addRole = () => {
 };
 
 const addEmployee = () => { 
-       // need the following info 
-    // 1. first name
-    // 2. last name 
-    // 3. role id 
-    // 4. manager id
-
-     // use INSERT INTO employee SET ?
-
-
-
-connection.query('SELECT * FROM departments', (err, res) => {
-
-    let newRoleId;
+    
+    connection.query('SELECT * FROM departments', (err, res) => {
 
     let departQuestions = [
         {
@@ -359,9 +342,9 @@ connection.query('SELECT * FROM departments', (err, res) => {
 
             connection.query('SELECT * FROM role WHERE role.department_id = ?', 
             [chosenDepart[0].id],
-            (err, res) => {
+            (err, results) => {
                 if (err) throw err;
-                console.log(res)
+                console.log(results)
 
                 let employeeQuestions = [
                     {
@@ -381,8 +364,8 @@ connection.query('SELECT * FROM departments', (err, res) => {
                         message: 'What role do you want this employee to?',
                         choices: function() {
                             let roleArray = [];
-                            for (let i = 0; i < res.length; i++) {
-                                roleArray.push(res[i].title);
+                            for (let i = 0; i < results.length; i++) {
+                                roleArray.push(results[i].title);
                             }
                             return roleArray;
                         },
@@ -390,28 +373,38 @@ connection.query('SELECT * FROM departments', (err, res) => {
                     }];
 
                     inquirer.prompt(employeeQuestions).then(function(answer) {
-                        // let chosenRole = [];
-                        // for (let i = 0; i < res.length; i++) {
-                        //     if (res[i].title === answer.employeeRole) {
-                        //         let id = res[i]
-                        //         chosenRole.push(id)
-                        //     }
-                        // }
-                        console.log(answer)
 
-                        // console.log(answer)
+                        let chosenRole = [];
+                        for (let i = 0; i < results.length; i++) {
+                            if (results[i].title === answer.employeeRole) {
+                                chosenRole.push(results[i])
+                            }
+                        }
 
-                        // connection.query('INSERT INTO role SET ?',
-                        //     {
-                        //         first_name: answer.firstName,
-                        //         last_name: answer.lastName,
-                        //         role_id: chosenRole[0].id,
-                        //         manager_id:
-                        //     }, (err) => {
-                        //         if (err) throw err;
-                        //         console.log('You successfully added a new role!')
-                        //         start();
-                        //     })
+
+                        let managerId = [];
+                            if ( answer.employeeRole === 'Manager') {
+                                let id = 0
+                                managerId.push(id)
+                            }
+                            else {
+                               let id = results[0].id
+                                managerId.push(id)
+                            }
+
+                       
+
+                        connection.query('INSERT INTO employee SET ?',
+                            {
+                                first_name: answer.firstName,
+                                last_name: answer.lastName,
+                                role_id: chosenRole[0].id,
+                                manager_id: managerId
+                            }, (err) => {
+                                if (err) throw err;
+                                console.log('You successfully added a new role!')
+                                start();
+                            })
 
                     })
 
@@ -449,8 +442,7 @@ connection.query('SELECT * FROM departments', (err, res) => {
 
 
 
-}; // NEED TO WORK ON 
-
+};
 // ---------- UPDATE ------------------------------
 
 const updateRole = () => { 
