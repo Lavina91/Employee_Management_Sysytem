@@ -18,7 +18,6 @@ const connection = mysql.createConnection({
 
 
 
-// functions needed to be created 
 const start = () => {
 
 inquirer.prompt({
@@ -460,8 +459,7 @@ const updateRole = () => {
                     title: answer.newRoleName
                 }, 
                 { 
-                    first_name: chosenEmployee[0].first_name,
-                    last_name: chosenEmployee[0].last_name
+                    first_name: chosenEmployee[0].first_name
                 }
             ],
             (err, res) => {
@@ -471,7 +469,7 @@ const updateRole = () => {
             })
         })
     })
-}; // NEED TO WORK ON 
+}; 
 
 
 
